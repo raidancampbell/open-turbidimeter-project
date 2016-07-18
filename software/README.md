@@ -2,7 +2,14 @@
 
 This directory contains the _firmware_ for the turbidimeter. These are the files that are compiled and uploaded to the microcontroller and provide the user interface, measurement, and calibration functions.
 
-Contents:
+##Notes
+-----
+ - All temperature correction has been removed: the hardware was not documented properly.
+ - All GSM code has been compiled out: several issues prevented proper compilation
+
+
+###Contents
+-----
 
 The folder called ```turbidimeter``` is the [Arduino](http://arduino.cc/en/main/software) project folder for the turbidimeter firmware. This can go anywhere and you can rename it, but the ```.ino``` file must have the save name as the parent folder when working in the Arduino IDE. This is the file that you most likely be working with if you want to change how the turbidimeter operates.
 
