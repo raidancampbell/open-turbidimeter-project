@@ -1,5 +1,7 @@
 /*------------------------------GSM Modem------------------------------------*/
 //NOTE: connect the modem to pins 2 (TX), 3 (RX), 7 (RESET), 5V, and GND.
+#ifdef GSM
+
 String sendMessage(char* phonenumber, String message){
   sms.beginSMS(phonenumber);  // send the message
   sms.print(message);
@@ -101,3 +103,4 @@ void parseMessage(String msg){
     }
   }
 }
+#endif

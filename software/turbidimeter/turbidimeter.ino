@@ -3,7 +3,7 @@
 /*---Developed by WASH4All, 2014. See wash4all.org for further information.--*/
 
 // Flags
-const boolean debug=false;  // to reset memory to default config -> true
+const boolean debug=true;  // to reset memory to default config -> true
 const boolean using_modem=false; // if not using a GSM modem, change to false
   
 // Libraries
@@ -11,7 +11,9 @@ const boolean using_modem=false; // if not using a GSM modem, change to false
 // (by placing them in your Arduino or Sketchbook folder)
 #define NO_PORTD_PINCHANGES
 #define NO_PORTC_PINCHANGES
-#include <GSM.h>
+#ifdef GSM
+  #include <GSM.h>
+#endif
 #include <PinChangeInt.h>
 #include <EEPROM.h>
 #include <EEPROMAnything.h>
@@ -59,13 +61,15 @@ const boolean using_modem=false; // if not using a GSM modem, change to false
 #define READ_REPS 6    // number of readings the turbidimeter will take per 
 // button press (average is used for reporting)
 
-// Set up GSM library
-GSM gsmAccess;  //US band:"GSM850_EGSM_DCS_PCS_MODE"
-GSM_SMS sms;
-boolean notConnected = true;
+#ifdef GSM
+  // Set up GSM library
+  GSM gsmAccess;  //US band:"GSM850_EGSM_DCS_PCS_MODE"
+  GSM_SMS sms;
+  boolean notConnected = true;
+#endif
 
 // Global Vars
-int  scale_divider = 2, sensitivity = HIGH_SENSITIVITY;     
+int  scale_divider = 1, sensitivity = HIGH_SENSITIVITY;     
 // scale_divider must match hardwired TSL_S2 and TSL_S3 settings, 
 // sensitivity sets TSL_S0 and TSL_S1 settings
 // see TSL230R user's guide for more information
@@ -118,44 +122,50 @@ struct config_t{
 /*---------------------------------------------------------------------------*/
 
 void setup() {
+  Serial.println("TRACE: hit setup()");
   // Set up serial commication
   Serial.begin(9600);
   Serial.println(VERSION_BYLINE);
   Serial.println("Press r to read, c to calibrate.");
   // Pin I/O settings
   pinMode(TSL_FREQ, INPUT); // light sensor
-  pinMode(TSL_S0, OUTPUT);  // light sensor
-  pinMode(TSL_S1, OUTPUT);  // light sensor
+//  pinMode(TSL_S0, OUTPUT);  // light sensor
+//  pinMode(TSL_S1, OUTPUT);  // light sensor
   pinMode(IR_LED, OUTPUT);  // light source
-  pinMode(BPIN, INPUT); // button
-  pinMode(VPIN, INPUT); // voltage
-  pinMode(shift_latch, OUTPUT); // shift register
-  pinMode(shift_clock, OUTPUT); // shift register
-  pinMode(shift_data,  OUTPUT); // shift register
-  for(int i = 0; i < num_displays; i){
-    pinMode(dispPorts[i], OUTPUT);
-    // set display pins to output
-  }
-
+//  pinMode(BPIN, INPUT); // button
+//  pinMode(VPIN, INPUT); // voltage
+//  pinMode(shift_latch, OUTPUT); // shift register
+//  pinMode(shift_clock, OUTPUT); // shift register
+//  pinMode(shift_data,  OUTPUT); // shift register
+//  for(int i = 0; i < num_displays; i){
+//    pinMode(dispPorts[i], OUTPUT);
+//    // set display pins to output
+//  }
+  Serial.println("TRACE: pinmodes set");
   // Startup procedure
   digitalWrite(IR_LED, LOW);  // light source off
   delay(200);
   turnOffDisplay();
+  Serial.println("TRACE: display is off");
   setSensitivity(sensitivity); // set sensor sensitivity
+  Serial.println("TRACE: sensor sensitivity set");
   timer = millis();
   displayForInterval(-1, "dashes", 1000);
 
   // Prepare sensors  
   if(divisionFactor_TSL230R() < 0){
+    Serial.println("TRACE: error enabling light reader");
     sufficient_battery = false;
     displayForInterval(-1, "error", 2000);
   }
   else{
+    Serial.println("TRACE: successfully enabled light reader");
     displayForInterval(-1, "ready", 2000);
     turnOffDisplay();
   }
 
   if(debug){
+    Serial.println("TRACE: using debug defaults");
     config.foo = 255;                               
     config.machine_id = 11111111;
     config.last_calibration_timestamp = 1390936721;
@@ -186,6 +196,7 @@ void setup() {
     // Write example calibration settings to EEPROM memory
   }
   else{
+    Serial.println("TRACE: not using debug defaults");
     EEPROM_readAnything(0, config);
     // Read calibration data from EEPROM memory
   }
@@ -205,14 +216,16 @@ void loop() {
   float reading;
   if(sufficient_battery){
     // SERIAL CONTROL OPTIONS
-    serialInput = 'x';
+    char serialInput = 'x';
     if (Serial.available() > 0) {
+      Serial.println("TRACE: we read characters from the serial buffer:");
       serialInput = Serial.read(); // get one-byte command option
       Serial.println((char)serialInput); // tell the user what they pressed
     }    
     // check for button press event (0 = pressed)
     bpress = analogRead(BPIN); 
     if (bpress >= BUTTON_EVENT_VALUE || serialInput == 'r'){
+      Serial.println("TRACE: user wanted to take a reading");
       bpressed = true;
       divisionFactor_TSL230R();                
       // read, but discard first reading
@@ -229,7 +242,8 @@ void loop() {
         Serial.print(" NTU\n");
         displayForInterval(reading, "data",4000);            
         displayForInterval(-1, "clear", 100);
-
+      
+      #ifdef GSM
         // GSM CONTROL OPTIONS
         if(using_modem){                                     
           int msg_len = 140;
@@ -248,9 +262,12 @@ void loop() {
           parseMessage(incoming);
           closeConnection();
         } 
+      #endif
+      
       }
     }
     else if(serialInput == 'c'){
+      Serial.println("TRACE: user wanted to calibrate");
       calibrate();
     }
     else if(serialInput != 'x'){
