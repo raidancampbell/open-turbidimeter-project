@@ -1,5 +1,23 @@
 # Construction and Usage of the Turbidimeter
 
+##Notes
+
+The contents of this directory are provided for basic guidance only: the fully functional device could not have possibly followed these instructions.  Some notes are given below.
+
+#####Schematic
+
+ - TSL230R has no VCC
+ - TSL230R is not connected to the microcontroller
+ - TSL230R has been EOL'd and replaced by the TSL235R
+ - Crystal on pins 9, 10, and 23 is not tied to ground
+ - Pin 23 is not grounded
+ - 7-segment LED is not connected
+ - mom-switch isn't shown
+ - Shift register outputs are not tied to 7-segment
+ - 7-segment has 2x6 pin headers, not 4x6 pin headers
+ - Voltage regulator is not connected to a power source
+ - No power switch on the voltage regulator
+
 ## Introduction
 
 The sections below detail the necessary parts and tools, wiring, assembly, and microcontroller programming to get up and running with the Open Turbidimeter Project. You are encouraged to contact the team members with any questions about the construction, operation, or expansion of this device.
