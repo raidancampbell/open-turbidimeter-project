@@ -28,13 +28,13 @@ A turbidimeter is an optical instrument that assesses turbidity by measuring the
 ![turbidimeter-designs.png](turbidimeter-designs.png)
 *Source:* [turbidimeter-designs.png](turbidimeter-designs.png)
 
-Turbidity is most commonly quantified by the Nephelometric Turbidity Unit (NTU)**\***. The NTU scale is defined by reference standards which are created by diluting approved compounds to concentrations designated by the [EPA][EPA Method 180.1] and [ISO][ISO 7027]. The primary standard for this scale is formazin, although other (safer) secondary standards have been approved. Note that these regulations have additional stipulations such as the measurement angle and wavelength of the light source. Looking over the standards themselves is *highly recommended.*
+Turbidity is most commonly quantified by the Nephelometric Turbidity Unit (NTU\*). *The NTU scale is defined by reference standards which are created by diluting approved compounds to concentrations designated by the [EPA][EPA Method 180.1] and [ISO][ISO 7027]. The primary standard for this scale is formazin, although other (safer) secondary standards have been approved. Note that these regulations have additional stipulations such as the measurement angle and wavelength of the light source. Looking over the standards themselves is __highly recommended.__*
 
 The human eye can detect turbidity levels down to roughly 5 or 10 NTU. Samples of water with turbidity lower than this will appear clear, but may still contain a concentration of colloidal particles sufficient to impair disinfection efforts and may carry a load of contaminants or pathogens sufficient to cause serious human illness. Current EPA regulations stipulate that conventionally treated surface water in the USA must be regularly sampled, that only 5% of samples in a given month may show turbidity greater than 0.3 NTU, and that no sample may show turbidity in excess of 1.0 NTU. Other countries employ different standards, and the World Health Organization (WHO) recommends that turbidity levels be less than 0.1 NTU prior to disinfection.
 
 Handheld units capable of analyzing a single sample vial cost several hundred dollars; automated units capable of intermittently analyzing samples from flowing water can cost several thousand. Partly completed open-source turbidimeter projects can be found online, apparently abandoned.
 
-**\*** Nephelometry is the term given to the side-scatter method of measuring turbidity described above
+\* Nephelometry is the term given to the side-scatter method of measuring turbidity described above
 
 [EPA Method 180.1]: (http://water.epa.gov/scitech/methods/cwa/bioindicators/upload/2007_07_10_methods_method_180_1.pdf)
 [ISO 7027]: http://www.iso.org/iso/catalogue_detail.htm?csnumber=30123
