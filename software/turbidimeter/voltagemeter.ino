@@ -39,5 +39,6 @@ float getLightMultiplier(){
   //calculate light intensity factor of LED due to voltage and current
   li_multiplier = ((led_voltage - led_vi) * li_slope + li_base) / li_base;               
   temp_multiplier = 1;
-  return li_multiplier * temp_multiplier;
+  return 1;
+//  return li_multiplier * temp_multiplier;
 }
