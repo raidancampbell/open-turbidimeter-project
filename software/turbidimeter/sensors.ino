@@ -25,17 +25,12 @@ void setSensitivity(int sens){    //set sensor sensitivity
 
 
 float rawValue(int num_rdgs){
-  Serial.println("TRACE: hit rawValue");
   digitalWrite(IR_LED, HIGH); //turn on light source
   int rep_cnt = 0, b = 0;
   long sum = 0, low = 1000000, high = 0, rd = 0;
   displayForInterval(-1, "cycle_dashes", 1000);
-  Serial.print("TRACE: attaching interrupt to port: ");
-  Serial.print(TSL_FREQ);
-  Serial.println("");
   delay(200);
   PCintPort::attachInterrupt(TSL_FREQ, add_pulse, RISING);
-  Serial.println("TRACE: interrupt attached.");
   //turn on frequency-counting function
   delay(200);
   pulse_count = 0; //reset frequency counter
@@ -43,21 +38,15 @@ float rawValue(int num_rdgs){
   while(rep_cnt < num_rdgs){
     //for given number of readings
     if(millis() - timer >= SAMPLING_WINDOW){
-      Serial.print("TRACE: reading taken: rd=");
-      Serial.print(rd);
-      Serial.print("\r\nTRACE: pulse_count=");
-      Serial.print(pulse_count);
-      Serial.println("");
       //once 1000 ms have elapsed
       //normalize frequency by TSL_S2 & TSL_S3 settings
       rd = pulse_count * scale_divider;
+      Serial.print("TRACE: reading taken: rd=");
+      Serial.println(rd);
       //find highest and lowest readings in the group
-      if(rd > high){
-        Serial.println("TRACE: high reading");
+      if(rd > high) {
         high = rd;
-      }                 
-      if(rd < low){
-        Serial.println("TRACE: low reading");
+      } else if(rd < low) {
         low = rd;
       }
       sum += rd;            //sum the readings
@@ -68,9 +57,8 @@ float rawValue(int num_rdgs){
   }
   Serial.println("TRACE: readings taken");
   PCintPort::detachInterrupt(TSL_FREQ);        //turn off frequency-counting function
-  Serial.println("TRACE: interrupt detached");
   digitalWrite(IR_LED, LOW);                   //turn off light source
-  if(num_rdgs > 3){
+  if(num_rdgs > 3) {
     Serial.println("TRACE: normalizing readings");
     // chuck out highest and lowest readings 
     // and average the rest, if there are four or more readings
@@ -109,7 +97,10 @@ float takeReadings(int num_rdgs){
     Serial.println(config.y2);
     Serial.println(config.y1);
     
-    if(raw_value > config.y4)       {ntu_value = raw_value * config.m4 + config.b4;}
+    if(raw_value > config.y7)  {ntu_value = raw_value * config.m7 + config.b7;}
+    else if(raw_value > config.y6)  {ntu_value = raw_value * config.m6 + config.b6;}
+    else if(raw_value > config.y5)  {ntu_value = raw_value * config.m5 + config.b5;}
+    else if(raw_value > config.y4)  {ntu_value = raw_value * config.m4 + config.b4;}
     else if(raw_value > config.y3)  {ntu_value = raw_value * config.m3 + config.b3;}
     else if(raw_value > config.y2)  {ntu_value = raw_value * config.m2 + config.b2;}
     else if(raw_value > config.y1)  {ntu_value = raw_value * config.m1 + config.b1;}

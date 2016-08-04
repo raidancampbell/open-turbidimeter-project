@@ -3,7 +3,7 @@
 /*---Developed by WASH4All, 2014. See wash4all.org for further information.--*/
 
 // Flags
-const boolean debug=true;  // to reset memory to default config -> true
+const boolean debug=false;  // to reset memory to default config -> true
 const boolean using_modem=false; // if not using a GSM modem, change to false
   
 // Libraries
@@ -103,11 +103,11 @@ struct config_t{
   int foo;           //example
   long machine_id;   //example
   unsigned long last_calibration_timestamp; // in seconds since 1/1/1970 12:00a
-  // define calibration constants for 5 calibration curves
+  // define calibration constants for 8 calibration curves
   // y is the lower bound, m is the slope, b is the the y-intercept (y=mxb)
-  float y0, y1, y2, y3, y4,
-  m0, m1, m2, m3, m4,
-  b0, b1, b2, b3, b4;
+  float y0, y1, y2, y3, y4, y5, y6, y7, y8,
+  m0, m1, m2, m3, m4, m5, m6, m7, m8,
+  b0, b1, b2, b3, b4, b5, b6, b7, b8;
   char* remoteNum;
   char* selfNum;
   String userfn; // First name of the person using the device
@@ -196,8 +196,38 @@ void setup() {
     // Write example calibration settings to EEPROM memory
   }
   else{
-    Serial.println("TRACE: not using debug defaults");
+    Serial.println("TRACE: loading config from EEPROM");
     EEPROM_readAnything(0, config);
+    Serial.print("config.y0: ");
+    Serial.println(config.y0);
+    Serial.print("config.m0: ");
+    Serial.println(config.m0);
+    Serial.print("config.b0: ");
+    Serial.println(config.b0);
+    Serial.print("config.y1: ");
+    Serial.println(config.y1);
+    Serial.print("config.m1: ");
+    Serial.println(config.m1);
+    Serial.print("config.b1: ");
+    Serial.println(config.b1);
+    Serial.print("config.y2: ");
+    Serial.println(config.y2);
+    Serial.print("config.m2: ");
+    Serial.println(config.m2);
+    Serial.print("config.b2: ");
+    Serial.println(config.b2);
+    Serial.print("config.y3: ");
+    Serial.println(config.y3);
+    Serial.print("config.m3: ");
+    Serial.println(config.m3);
+    Serial.print("config.b3: ");
+    Serial.println(config.b3);
+    Serial.print("config.y4: ");
+    Serial.println(config.y4);
+    Serial.print("config.m4: ");
+    Serial.println(config.m4);
+    Serial.print("config.b4: ");
+    Serial.println(config.b4);
     // Read calibration data from EEPROM memory
   }
 }
@@ -218,7 +248,6 @@ void loop() {
     // SERIAL CONTROL OPTIONS
     char serialInput = 'x';
     if (Serial.available() > 0) {
-      Serial.println("TRACE: we read characters from the serial buffer:");
       serialInput = Serial.read(); // get one-byte command option
       Serial.println((char)serialInput); // tell the user what they pressed
     }    
